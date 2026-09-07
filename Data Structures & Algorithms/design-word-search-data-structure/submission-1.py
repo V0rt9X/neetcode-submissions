@@ -1,0 +1,43 @@
+class Tnode:
+    def __init__(self):
+        self.chars = {}
+        self.EOF = False
+
+class WordDictionary:
+
+    def __init__(self):
+        self.root = Tnode()
+
+    def addWord(self, word: str) -> None:
+        curr = self.root
+
+        for c in word:
+            if c not in curr.chars:
+                curr.chars[c] = Tnode()
+            curr = curr.chars[c]
+        
+        curr.EOF = True
+
+    def search(self, word: str) -> bool:
+
+        def dfs(i, root):
+            curr = root
+
+            for j in range(i, len(word)):
+                c = word[j]
+
+                if c == '.':
+                    for char in curr.chars.values():
+                        if dfs(j + 1, char):
+                            return True
+                        
+                    return False
+                else:
+                    if c not in curr.chars:
+                        return False
+                    curr = curr.chars[c]
+                
+            return curr.EOF
+        
+        return dfs(0, self.root)
+
